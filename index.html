@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      padding: 16px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Mini app kjører ✅</h2>
+
+  <div class="card" id="userBox">Laster brukerinfo…</div>
+
+  <div class="card">
+    <button onclick="show('📦 Status: demo')">📦 Status</button>
+  </div>
+
+  <div class="card">
+    <button onclick="show('🧾 Info: Telegram mini app demo')">🧾 Info</button>
+  </div>
+
+  <div class="card">
+    <button onclick="closeApp()">❌ Lukk</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+
+    function show(msg) {
+      alert(msg);
+    }
+
+    function closeApp() {
+      if (tg) tg.close();
+      else window.close();
+    }
+
+    if (tg) {
+      tg.expand();
+      const u = tg.initDataUnsafe?.user;
+      document.getElementById("userBox").innerText =
+        u ? `Hei, ${u.first_name}` : "Hei!";
+    } else {
+      document.getElementById("userBox").innerText =
+        "Åpne denne siden inne i Telegram";
+    }
+  </script>
+</body>
+</html>
+
+
