@@ -4,67 +4,95 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mini App</title>
+
+  <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
     body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       padding: 16px;
+      background: #f6f6f6;
     }
+
+    h2 {
+      margin-bottom: 8px;
+    }
+
     .card {
-      border: 1px solid #ddd;
+      background: white;
       border-radius: 14px;
       padding: 16px;
       margin: 12px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
+
     button {
       width: 100%;
       padding: 14px;
       border-radius: 12px;
       border: none;
       font-size: 16px;
+      cursor: pointer;
     }
+
+    .status { background: #e7f1ff; }
+    .info   { background: #e9ffe7; }
+    .close  { background: #ffe7e7; }
   </style>
 </head>
+
 <body>
+
   <h2>Mini app kjører ✅</h2>
 
-  <div class="card" id="userBox">Laster brukerinfo…</div>
-
-  <div class="card">
-    <button onclick="show('📦 Status: demo')">📦 Status</button>
+  <div class="card" id="userBox">
+    Laster brukerinfo…
   </div>
 
   <div class="card">
-    <button onclick="show('🧾 Info: Telegram mini app demo')">🧾 Info</button>
+    <button class="status" onclick='send("status")'>📦 Status</button>
   </div>
 
   <div class="card">
-    <button onclick="closeApp()">❌ Lukk</button>
+    <button class="info" onclick='send("info")'>🧾 Info</button>
+  </div>
+
+  <div class="card">
+    <button class="close" onclick='send("close")'>❌ Lukk</button>
   </div>
 
   <script>
     const tg = window.Telegram?.WebApp;
 
-    function show(msg) {
-      alert(msg);
-    }
+    function send(action) {
+      if (!tg) {
+        alert("Åpne denne siden inne i Telegram");
+        return;
+      }
 
-    function closeApp() {
-      if (tg) tg.close();
-      else window.close();
+      tg.sendData(JSON.stringify({
+        action: action,
+        timestamp: Date.now()
+      }));
+
+      tg.close();
     }
 
     if (tg) {
       tg.expand();
-      const u = tg.initDataUnsafe?.user;
+
+      const user = tg.initDataUnsafe?.user;
       document.getElementById("userBox").innerText =
-        u ? `Hei, ${u.first_name}` : "Hei!";
+        user
+          ? `Hei, ${user.first_name}${user.username ? " (@" + user.username + ")" : ""}`
+          : "Hei!";
     } else {
       document.getElementById("userBox").innerText =
-        "Åpne denne siden inne i Telegram";
+        "Denne siden må åpnes via Telegram for full støtte.";
     }
   </script>
+
 </body>
 </html>
-
 
